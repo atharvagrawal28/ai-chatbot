@@ -2,11 +2,11 @@ import streamlit as st
 from groq import Groq
 
 st.set_page_config(
-    page_title="Better than Grok",
+    page_title="Better than Perplexity",
     page_icon="😊",
     layout="centered",
 )
-st.title("😊Better than Grok")
+st.title("😊Better than Perplexity")
 st.caption("A chatbox powered by Groq API - built with Python+ Streamlit")
 
 with st.sidebar:
