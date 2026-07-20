@@ -9,23 +9,33 @@ st.set_page_config(
 st.title("😊Better than Chatgpt")
 st.caption("A chatbox powered by Groq API - built with Python+ Streamlit , Prepared By Atharv Agrawal")
 
+import os
+
+# Key comes from the backend (Streamlit secrets / env) so visitors can chat
+# instantly; the sidebar input is only a fallback for local runs without one.
+backend_key = st.secrets.get("GROQ_API_KEY", "") or os.environ.get("GROQ_API_KEY", "")
+
 with st.sidebar:
     st.header("Setup")
 
-    api_key = st.text_input(
-        "Groq API Key",
-        type="password",
-        placeholder="gsk_...",
-        help="Get your free key at https://console.groq.com",
-    )
+    if backend_key:
+        api_key = backend_key
+        st.success("✅ Ready to chat — no API key needed.")
+    else:
+        api_key = st.text_input(
+            "Groq API Key",
+            type="password",
+            placeholder="gsk_...",
+            help="Get your free key at https://console.groq.com",
+        )
 
     model = st.selectbox(
         "Model",
         options=[
             "llama-3.3-70b-versatile",
             "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-            "gemma2-9b-it"
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
         ],
         help="All models are free on Groq!"
     )
@@ -34,12 +44,13 @@ with st.sidebar:
         st.session_state.messages=[]
         st.rerun()
 
-    st.markdown("""
+    if not backend_key:
+        st.markdown("""
     **How to get a free API Key:**
      1. Go to [console.groq.com](https://console.groq.com)
      2.Sign up/ Log in
      3. Click **API keys - Create Key**
-     4. Paste it above                                    
+     4. Paste it above
      """)
     
 if "messages" not in st.session_state:
